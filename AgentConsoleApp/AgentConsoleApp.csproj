@@ -7,7 +7,8 @@
     <Company>GPO</Company>
     <Product>AA43</Product>
     <Description>Import txt (comma seperate) to DB</Description>
-    <ApplicationIcon>Designbolts-Monsters-University-Cute-Blue-Monsters.ico</ApplicationIcon>
+    <ApplicationIcon>BlueMonsters.ico</ApplicationIcon>
+    <Copyright>Fo</Copyright>
   </PropertyGroup>
 
   <ItemGroup>
