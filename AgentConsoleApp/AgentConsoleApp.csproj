@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <Authors>PiriyaV</Authors>
+    <Company>GPO</Company>
+    <Product>AA43</Product>
+    <Description>Import txt (comma seperate) to DB</Description>
+    <ApplicationIcon>Designbolts-Monsters-University-Cute-Blue-Monsters.ico</ApplicationIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ConsoleTables" Version="2.3.0" />
+    <PackageReference Include="Dapper" Version="2.0.30" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.6.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
+  </ItemGroup>
+
+</Project>

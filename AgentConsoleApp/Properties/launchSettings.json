@@ -1,0 +1,7 @@
+{
+  "profiles": {
+    "AgentConsoleApp": {
+      "commandName": "Project"
+    }
+  }
+}
