@@ -24,16 +24,17 @@ namespace AgentConsoleApp
             string sourceDirectory;
             string line;
             int detailLineNo, headerLineNo;
-            string fileName;
+            string fileName = "";
             List<returnModel> returnCollection = new List<returnModel>();
             
             // Display title as the C# console app
-            Console.WriteLine("Import txt to DB (PiriyaV)\r");
+            Console.WriteLine("Import txt to DB by P' Fo\r");
             Console.WriteLine("------------------------\n");
 
             // Ask the user to type path.
             Console.Write(@"Enter source directory path (eg: D:\folder): ");
             sourceDirectory = Convert.ToString(Console.ReadLine());
+            Console.Write("\n");
 
             try
             {
@@ -69,7 +70,8 @@ namespace AgentConsoleApp
                                     detailLineNo++;
                                     break;
                                 default:
-                                    continue;
+                                    break;
+                                    //continue;
                             }
                         }
                     }
@@ -82,16 +84,18 @@ namespace AgentConsoleApp
             } 
             catch (Exception ex)
             {
-                Console.Write(ex.Message);
+                Console.WriteLine("Error occured : " + ex.Message);
+                Console.WriteLine("Error on : \"" + fileName + "\"");
+                Console.WriteLine("Please check your file and try again.\n");
             }
             finally
             {
+                Console.WriteLine("----- Import success list. -----");
                 ConsoleTable.From(returnCollection).Write();
                 //Console.WriteLine(JsonSerializer.Serialize(returnCollection));
             }
 
-            Console.WriteLine();
-            Console.Write(@"Press any key to close this window");
+            Console.Write("\nPress any key to close this window");
             Console.ReadKey();
         }
 
