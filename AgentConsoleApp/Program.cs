@@ -27,19 +27,25 @@ namespace AgentConsoleApp
             List<returnModel> returnCollection = new List<returnModel>();
 
             // Display title
-            Console.Write(FiggleFonts.Ogre.Render("------------"));
+            //Console.Write(FiggleFonts.Ogre.Render("------------"));
             Console.Write(FiggleFonts.Slant.Render("txt to db by FO"));
-            Console.Write(FiggleFonts.Ogre.Render("------------"));
-
+            Console.WriteLine("------------------------------------------------------------------------\n");
 
             // Ask the user to type path
             Console.Write(@"Enter source directory path (eg: D:\folder) : ");
             sourceDirectory = Convert.ToString(Console.ReadLine());
             Console.Write("\n");
 
+            var folderBackup = "Imported_" + DateTime.Now.ToString("ddMMyyyy_HHmmss");
+            var targetPath = Path.Combine(sourceDirectory, folderBackup);
+
             try
             {
                 var txtFiles = Directory.EnumerateFiles(sourceDirectory, "*.txt");
+
+                // Create folder for file import successful
+                Directory.CreateDirectory(targetPath);
+
                 foreach (string currentFile in txtFiles)
                 {
                     returnModel Model = new returnModel();
@@ -76,6 +82,10 @@ namespace AgentConsoleApp
                             }
                         }
                     }
+
+                    // Move file to folder backup
+                    var destFile = Path.Combine(targetPath, fileName);
+                    File.Move(currentFile, destFile);
 
                     Model.HeaderNo = headerLineNo;
                     Model.DetailNo = detailLineNo;
