@@ -28,8 +28,8 @@ namespace AgentConsoleApp
 
             // Display title
             //Console.Write(FiggleFonts.Ogre.Render("------------"));
-            Console.Write(FiggleFonts.Slant.Render("txt to db by FO"));
-            Console.WriteLine("------------------------------------------------------------------------\n");
+            Console.Write(FiggleFonts.Slant.Render("Text to DB"));
+            Console.WriteLine("------------- created by PiriyaV -------------\n");
 
             // Ask the user to type path
             Console.Write(@"Enter source directory path (eg: D:\folder) : ");
@@ -43,11 +43,14 @@ namespace AgentConsoleApp
             {
                 var txtFiles = Directory.EnumerateFiles(sourceDirectory, "*.txt");
 
-                // Create folder for file import successful
-                Directory.CreateDirectory(targetPath);
-
                 foreach (string currentFile in txtFiles)
                 {
+                    // Create folder for file import successful
+                    if (!Directory.Exists(targetPath))
+                    {
+                        Directory.CreateDirectory(targetPath);
+                    }
+
                     returnModel Model = new returnModel();
 
                     fileName = Path.GetFileName(currentFile);
@@ -106,9 +109,19 @@ namespace AgentConsoleApp
             }
             finally
             {
-                Console.WriteLine("----- Import success list. -----");
-                ConsoleTable.From(returnCollection).Write();
+                
+                if (returnCollection.Count > 0)
+                {
+                    Console.WriteLine("------------ Import success list. ------------");
+                    ConsoleTable.From(returnCollection).Write();
+                }
+                
                 //Console.WriteLine(JsonSerializer.Serialize(returnCollection));
+
+                if (Directory.Exists(targetPath))
+                {
+                    Console.WriteLine("\nBackup folder : \"" + targetPath + "\"");
+                }
             }
 
             Console.Write("\nPress any key to close this window ");
