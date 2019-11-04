@@ -29,14 +29,14 @@ namespace AgentConsoleApp
             // Display title
             //Console.Write(FiggleFonts.Ogre.Render("------------"));
             Console.Write(FiggleFonts.Slant.Render("Text to DB"));
-            Console.WriteLine("------------- created by PiriyaV -------------\n");
+            Console.WriteLine("------------- Created by PiriyaV -------------\n");
 
             // Ask the user to type path
             Console.Write(@"Enter source directory path (eg: D:\folder) : ");
             sourceDirectory = Convert.ToString(Console.ReadLine());
             Console.Write("\n");
 
-            var folderBackup = "Imported_" + DateTime.Now.ToString("ddMMyyyy_HHmmss");
+            var folderBackup = "imported_" + DateTime.Now.ToString("ddMMyyyy_HHmmss");
             var targetPath = Path.Combine(sourceDirectory, folderBackup);
 
             try
