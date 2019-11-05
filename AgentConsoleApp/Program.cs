@@ -120,7 +120,7 @@ namespace AgentConsoleApp
 
                 if (Directory.Exists(targetPath))
                 {
-                    Console.WriteLine("\nBackup folder : \"" + targetPath + "\"");
+                    Console.WriteLine($"\nImported folder : \"{ targetPath }\"");
                 }
             }
 
