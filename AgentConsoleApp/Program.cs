@@ -1,9 +1,13 @@
 ﻿using ConsoleTables;
 using Figgle;
 using System;
+using System.Drawing;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Threading;
+using Konsole;
+using Console = Colorful.Console;
 using static AgentConsoleApp.ImportController;
 
 namespace AgentConsoleApp
@@ -28,14 +32,30 @@ namespace AgentConsoleApp
             string FL_Filecode = "";
             string FL_TotalRecord = "";
             string HD_PoNo = "";
+            int counter = 1;
 
             // Display title
             //Console.Write(FiggleFonts.Ogre.Render("------------"));
-            Console.Write(FiggleFonts.Banner.Render("txt to DB"));
-            Console.WriteLine("------------- Created by PiriyaV -------------\n");
+            Console.WriteWithGradient(FiggleFonts.Banner.Render("txt to db"), Color.LightGreen, Color.ForestGreen, 16);
+
+            Colorful.Console.ReplaceAllColorsWithDefaults();
+
+            Console.WriteLine(" --------------- Created by PiriyaV ----------------\n", Color.LawnGreen);
+            /*
+            List<char> chars = new List<char>()
+            {
+                ' ', 'C', 'r', 'e', 'a', 't', 'e', 'd', ' ',
+                'b', 'y', ' ',
+                'P', 'i', 'r', 'i', 'y', 'a', 'V', ' '
+            };
+            Console.Write("---------------", Color.LawnGreen);
+            Console.WriteWithGradient(chars, Color.Blue, Color.Purple, 16);
+            Console.Write("---------------", Color.LawnGreen);
+            Console.WriteLine("\n");
+            */
 
             // Ask the user to type path
-            Console.Write(@"Enter source directory path (eg: D:\folder) : ");
+            Console.Write(@"Enter source path (eg: D:\folder) : ", Color.LightYellow);
             sourceDirectory = Convert.ToString(Console.ReadLine());
             Console.Write("\n");
 
@@ -46,6 +66,15 @@ namespace AgentConsoleApp
             {
                 var txtFiles = Directory.EnumerateFiles(sourceDirectory, "*.txt");
 
+                DirectoryInfo di = new DirectoryInfo(sourceDirectory);
+                var countFiles = di.GetFiles("*.txt").Length;
+                var pb = new ProgressBar(PbStyle.DoubleLine, countFiles);
+
+                if (countFiles == 0)
+                {
+                    throw new ArgumentException("Text file not found in folder.");
+                }
+
                 foreach (string currentFile in txtFiles)
                 {
                     returnModel Model = new returnModel();
@@ -53,6 +82,9 @@ namespace AgentConsoleApp
                     fileName = Path.GetFileName(currentFile);
                     headerLineNo = 0;
                     detailLineNo = 0;
+
+                    pb.Refresh(counter, "Import in process, Don't close the window. :-)");
+                    Thread.Sleep(75);
 
                     using (StreamReader file = new StreamReader(currentFile))
                     {
@@ -89,7 +121,8 @@ namespace AgentConsoleApp
                                     detailLineNo++;
                                     break;
                                 default:
-                                    break;
+                                    throw new ArgumentException("Incorrect format, File must contain 'FL, HD or LN' in the first column on each row!");
+                                    //break;
                                     //continue;
                             }
                         }
@@ -109,26 +142,30 @@ namespace AgentConsoleApp
                     Model.DetailNo = detailLineNo;
                     Model.FileName = fileName;
                     returnCollection.Add(Model);
+
+                    counter++;
                 }
             } 
             catch (Exception ex)
             {
-                Console.WriteLine("Error occured : " + ex.Message);
+                Console.Write("\nError occured : " , Color.OrangeRed);
+                Console.WriteLine(ex.Message);
                 //Console.WriteLine("Error trace : " + ex.StackTrace);
 
                 if (!String.IsNullOrEmpty(fileName))
                 {
-                    Console.WriteLine("Error on : '" + fileName + "'");
+                    Console.Write("\nError on : ", Color.OrangeRed);
+                    Console.WriteLine("'" + fileName + "'");
                 }
                 
-                Console.WriteLine("Please check your path or file and try again.\n");
+                Console.WriteLine("\nPlease check your path or file and try again.\n", Color.Yellow);
             }
             finally
             {
                 
                 if (returnCollection.Count > 0)
                 {
-                    Console.WriteLine("------------ Import success list. ------------");
+                    Console.WriteLine("\n--------------- Imported list ---------------", Color.LightGreen);
                     ConsoleTable.From(returnCollection).Write();
                 }
                 
@@ -136,7 +173,8 @@ namespace AgentConsoleApp
 
                 if (Directory.Exists(targetPath))
                 {
-                    Console.WriteLine($"\nImported folder : \"{ targetPath }\"");
+                    Console.Write("\nImported folder : ", Color.LightGreen);
+                    Console.WriteLine($"'{ targetPath }'");
                 }
             }
 
