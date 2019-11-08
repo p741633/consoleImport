@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -7,12 +7,25 @@
     <Company>GPO</Company>
     <Product>AA43</Product>
     <Description>Import txt (comma seperate) to DB</Description>
-    <ApplicationIcon>Designbolts-Monsters-University-Cute-Blue-Monsters.ico</ApplicationIcon>
+    <ApplicationIcon>BlueMonsters.ico</ApplicationIcon>
+    <Copyright>Fo</Copyright>
+    <!--
+	  <PublishSingleFile>true</PublishSingleFile>
+	  <PublishTrimmed>true</PublishTrimmed>
+	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    -->
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>false</Optimize>
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Colorful.Console" Version="1.2.9" />
     <PackageReference Include="ConsoleTables" Version="2.3.0" />
     <PackageReference Include="Dapper" Version="2.0.30" />
+    <PackageReference Include="Figgle" Version="0.3.0" />
+    <PackageReference Include="Goblinfactory.Konsole.ProgressBar.Core" Version="1.0.2" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.6.0" />
     <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
   </ItemGroup>
