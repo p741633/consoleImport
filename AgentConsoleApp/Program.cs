@@ -25,10 +25,13 @@ namespace AgentConsoleApp
             int detailLineNo, headerLineNo;
             string fileName = "";
             List<returnModel> returnCollection = new List<returnModel>();
+            string FL_Filecode = "";
+            string FL_TotalRecord = "";
+            string HD_PoNo = "";
 
             // Display title
             //Console.Write(FiggleFonts.Ogre.Render("------------"));
-            Console.Write(FiggleFonts.Slant.Render("Text to DB"));
+            Console.Write(FiggleFonts.Banner.Render("txt to DB"));
             Console.WriteLine("------------- Created by PiriyaV -------------\n");
 
             // Ask the user to type path
@@ -45,12 +48,6 @@ namespace AgentConsoleApp
 
                 foreach (string currentFile in txtFiles)
                 {
-                    // Create folder for file import successful
-                    if (!Directory.Exists(targetPath))
-                    {
-                        Directory.CreateDirectory(targetPath);
-                    }
-
                     returnModel Model = new returnModel();
 
                     fileName = Path.GetFileName(currentFile);
@@ -70,13 +67,25 @@ namespace AgentConsoleApp
                             {
                                 case "FL":
                                     //Dump(parser);
+                                    FL_Filecode = cells[1];
+                                    FL_TotalRecord = cells[2];
                                     break;
                                 case "HD":
-                                    DumpHD(parser, conn);
+                                    if (string.IsNullOrEmpty(FL_Filecode) || string.IsNullOrEmpty(FL_TotalRecord))
+                                    {
+                                        throw new ArgumentException("FL key not found!");
+                                    }
+
+                                    HD_PoNo = DumpHD(parser, conn, FL_Filecode, FL_TotalRecord);
                                     headerLineNo++;
                                     break;
                                 case "LN":
-                                    DumpLN(parser, conn);
+                                    if (string.IsNullOrEmpty(HD_PoNo))
+                                    {
+                                        throw new ArgumentException("HD key not found!");
+                                    }
+
+                                    DumpLN(parser, conn, HD_PoNo);
                                     detailLineNo++;
                                     break;
                                 default:
@@ -84,6 +93,12 @@ namespace AgentConsoleApp
                                     //continue;
                             }
                         }
+                    }
+
+                    // Create folder for file import successful
+                    if (!Directory.Exists(targetPath))
+                    {
+                        Directory.CreateDirectory(targetPath);
                     }
 
                     // Move file to folder backup
@@ -99,6 +114,7 @@ namespace AgentConsoleApp
             catch (Exception ex)
             {
                 Console.WriteLine("Error occured : " + ex.Message);
+                //Console.WriteLine("Error trace : " + ex.StackTrace);
 
                 if (!String.IsNullOrEmpty(fileName))
                 {
