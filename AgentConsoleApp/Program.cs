@@ -115,17 +115,17 @@ namespace AgentConsoleApp
 
                             if (Lineno == 1 && firstColumn != "FL")
                             {
-                                pbValidate.Refresh(counterFile, "Validate failed.");
+                                pbValidate.Refresh(counterFileValidate, "Validate failed.");
                                 throw new ArgumentException("First line must contain FL column");
                             }
                             else if (Lineno ==2 && firstColumn != "HD")
                             {
-                                pbValidate.Refresh(counterFile, "Validate failed.");
+                                pbValidate.Refresh(counterFileValidate, "Validate failed.");
                                 throw new ArgumentException("Second line must contain HD column");
                             }
                             else if (Lineno >= 3 && firstColumn != "LN")
                             {
-                                pbValidate.Refresh(counterFile, "Validate failed.");
+                                pbValidate.Refresh(counterFileValidate, "Validate failed.");
                                 throw new ArgumentException("Data must contain LN column");
                             }
 
@@ -134,27 +134,27 @@ namespace AgentConsoleApp
                                 case "FL":
                                     if (ColumnNo != 3)
                                     {
-                                        pbValidate.Refresh(counterFile, "Validate failed.");
+                                        pbValidate.Refresh(counterFileValidate, "Validate failed.");
                                         throw new ArgumentException("FL must have 3 columns");
                                     }
                                     break;
                                 case "HD":
                                     if (ColumnNo != 27)
                                     {
-                                        pbValidate.Refresh(counterFile, "Validate failed.");
+                                        pbValidate.Refresh(counterFileValidate, "Validate failed.");
                                         throw new ArgumentException("HD must have 27 columns");
                                     }
                                     break;
                                 case "LN":
                                     if (ColumnNo != 13)
                                     {
-                                        pbValidate.Refresh(counterFile, "Validate failed.");
-                                        throw new ArgumentException("LN must have 13 columns");
+                                        pbValidate.Refresh(counterFileValidate, "Validate failed.");
+                                        throw new ArgumentException($"LN must have 13 columns (At line { Lineno })");
                                     }
                                     break;
                                 default:
-                                    pbValidate.Refresh(counterFile, "Validate failed.");
-                                    throw new ArgumentException("Incorrect format, File must contain 'FL, HD or LN' in the first column on each row!");
+                                    pbValidate.Refresh(counterFileValidate, "Validate failed.");
+                                    throw new ArgumentException($"Incorrect format, File must contain 'FL, HD or LN' in the first column on each row! (At Line { Lineno})");
                                     //break;
                                     //continue;
                             }
