@@ -217,5 +217,18 @@ namespace AgentConsoleApp
 
             return firstColumn;
         }
+
+        public static int CountLinesReader(string FilePath)
+        {
+            var lineCounter = 0;
+            using (var reader = new StreamReader(FilePath))
+            {
+                while (reader.ReadLine() != null)
+                {
+                    lineCounter++;
+                }
+            }
+            return lineCounter;
+        }
     }
 }
