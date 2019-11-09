@@ -37,6 +37,9 @@ namespace AgentConsoleApp
             int counterLine;
 
             // Display title
+            Console.Title = "TxtToDB 1.01";
+
+            // Display header
             Console.WriteWithGradient(FiggleFonts.Banner.Render("txt to db"), Color.LightGreen, Color.ForestGreen, 16);
             Console.ReplaceAllColorsWithDefaults();
 
