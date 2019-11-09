@@ -27,12 +27,13 @@ namespace AgentConsoleApp
             string sourceDirectory;
             string line;
             int detailLineNo, headerLineNo;
-            string fileName = "";
             List<returnModel> returnCollection = new List<returnModel>();
             string FL_Filecode;
             string FL_TotalRecord;
             string HD_PoNo;
+            string fileName = "";
             int counterFile = 1;
+            int counterFileValidate = 1;
             int counterLine;
 
             // Display title
@@ -76,14 +77,101 @@ namespace AgentConsoleApp
                 DirectoryInfo di = new DirectoryInfo(sourceDirectory);
                 var FileNum = di.GetFiles("*.txt").Length;
 
-                // Create progress bar (Overall)
-                var pbOverall = new ProgressBar(PbStyle.DoubleLine, FileNum);
-
                 // Throw no txt file
                 if (FileNum == 0)
                 {
                     throw new ArgumentException("Text file not found in folder.");
                 }
+
+                #region Validate Section
+                var pbValidate = new ProgressBar(PbStyle.DoubleLine, FileNum);
+
+                foreach (string currentFile in FilePath)
+                {
+                    // Update progress bar (Overall)
+                    fileName = Path.GetFileName(currentFile);
+                    pbValidate.Refresh(counterFileValidate, "Validating, Please wait...");
+                    Thread.Sleep(50);
+
+                    var Lineno = 1;
+                    using (StreamReader file = new StreamReader(currentFile))
+                    {
+                        while ((line = file.ReadLine()) != null)
+                        {
+                            var parser = CreateParser(line, ",");
+
+                            string firstColumn = "";
+                            int ColumnNo = 0;
+                            string[] cells;
+                            while (!parser.EndOfData)
+                            {
+                                cells = parser.ReadFields();
+                                firstColumn = cells[0];
+                                ColumnNo = cells.Length;
+                            }
+
+                            if (Lineno == 1 && firstColumn != "FL")
+                            {
+                                pbValidate.Refresh(counterFile, "Validate failed.");
+                                throw new ArgumentException("First line must contain FL column");
+                            }
+                            else if (Lineno ==2 && firstColumn != "HD")
+                            {
+                                pbValidate.Refresh(counterFile, "Validate failed.");
+                                throw new ArgumentException("Second line must contain HD column");
+                            }
+                            else if (Lineno >= 3 && firstColumn != "LN")
+                            {
+                                pbValidate.Refresh(counterFile, "Validate failed.");
+                                throw new ArgumentException("Data must contain LN column");
+                            }
+
+                            switch (firstColumn)
+                            {
+                                case "FL":
+                                    if (ColumnNo != 3)
+                                    {
+                                        pbValidate.Refresh(counterFile, "Validate failed.");
+                                        throw new ArgumentException("FL must have 3 columns");
+                                    }
+                                    break;
+                                case "HD":
+                                    if (ColumnNo != 27)
+                                    {
+                                        pbValidate.Refresh(counterFile, "Validate failed.");
+                                        throw new ArgumentException("HD must have 27 columns");
+                                    }
+                                    break;
+                                case "LN":
+                                    if (ColumnNo != 13)
+                                    {
+                                        pbValidate.Refresh(counterFile, "Validate failed.");
+                                        throw new ArgumentException("LN must have 13 columns");
+                                    }
+                                    break;
+                                default:
+                                    pbValidate.Refresh(counterFile, "Validate failed.");
+                                    throw new ArgumentException("Incorrect format, File must contain 'FL, HD or LN' in the first column on each row!");
+                                    //break;
+                                    //continue;
+                            }
+
+                            Lineno++;
+                        }
+                    }
+                    // Change wording in progress bar
+                    if (counterFileValidate == FileNum)
+                    {
+                        pbValidate.Refresh(counterFileValidate, "Validate finished.");
+                    }
+
+                    counterFileValidate++;
+                }
+                #endregion
+
+                #region Import Section
+                // Create progress bar (Overall)
+                var pbOverall = new ProgressBar(PbStyle.DoubleLine, FileNum);
 
                 foreach (string currentFile in FilePath)
                 {
@@ -112,10 +200,18 @@ namespace AgentConsoleApp
                         while ((line = file.ReadLine()) != null)
                         {
                             var parser = CreateParser(line, ",");
+                            var parserFirstcolumn = CreateParser(line, ",");
+                            var parserFL = CreateParser(line, ",");
 
                             // Store first column
-                            string[] cells = line.Split(",");
-                            var firstColumn = cells[0];
+                            string[] cells;
+                            string firstColumn = "";
+                            while (!parserFirstcolumn.EndOfData)
+                            {
+                                cells = parserFirstcolumn.ReadFields();
+                                firstColumn = cells[0];
+                            }
+                            //string[] cells = line.Split(",");
 
                             // Update progress bar (Each file)
                             pbDetail.Refresh(counterLine, fileName);
@@ -126,35 +222,43 @@ namespace AgentConsoleApp
                             {
                                 case "FL":
                                     // Store FL key for
-                                    FL_Filecode = cells[1];
-                                    FL_TotalRecord = cells[2];
+                                    while (!parserFL.EndOfData)
+                                    {
+                                        cells = parserFL.ReadFields();
+                                        FL_Filecode = cells[1];
+                                        FL_TotalRecord = cells[2];
+                                    }
                                     //Dump(parser);
                                     break;
                                 case "HD":
+                                    /*
                                     // Throw if FL key not found
                                     if (string.IsNullOrEmpty(FL_Filecode) || string.IsNullOrEmpty(FL_TotalRecord))
                                     {
                                         throw new ArgumentException("FL key not found!");
                                     }
+                                    */
 
                                     // Insert to DB
                                     HD_PoNo = DumpHD(parser, conn, FL_Filecode, FL_TotalRecord);
                                     headerLineNo++;
                                     break;
                                 case "LN":
+                                    /*
                                     // Throw if HD key not found
                                     if (string.IsNullOrEmpty(HD_PoNo))
                                     {
                                         throw new ArgumentException("HD key not found!");
                                     }
+                                    */
 
                                     // Insert to DB
                                     DumpLN(parser, conn, HD_PoNo);
                                     detailLineNo++;
                                     break;
                                 default:
-                                    throw new ArgumentException("Incorrect format, File must contain 'FL, HD or LN' in the first column on each row!");
-                                    //break;
+                                    //throw new ArgumentException("Incorrect format, File must contain 'FL, HD or LN' in the first column on each row!");
+                                    break;
                                     //continue;
                             }
 
@@ -181,12 +285,13 @@ namespace AgentConsoleApp
                     // Change wording in progress bar
                     if (counterFile == FileNum)
                     {
-                        pbOverall.Refresh(counterFile, "Finished.");
+                        pbOverall.Refresh(counterFile, "Import finished.");
                     }
 
                     counterFile++;
                 }
-            } 
+                #endregion
+            }
             catch (Exception ex)
             {
                 // Show error message
