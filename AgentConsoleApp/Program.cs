@@ -135,21 +135,21 @@ namespace AgentConsoleApp
                                     if (ColumnNo != 3)
                                     {
                                         pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                        throw new ArgumentException("FL must have 3 columns");
+                                        throw new ArgumentException($"FL must have 3 columns ({ ColumnNo } columns found)");
                                     }
                                     break;
                                 case "HD":
                                     if (ColumnNo != 27)
                                     {
                                         pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                        throw new ArgumentException("HD must have 27 columns");
+                                        throw new ArgumentException($"HD must have 27 columns ({ ColumnNo } columns found)");
                                     }
                                     break;
                                 case "LN":
                                     if (ColumnNo != 13)
                                     {
                                         pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                        throw new ArgumentException($"LN must have 13 columns (At line { Lineno })");
+                                        throw new ArgumentException($"LN must have 13 columns (At line { Lineno }, { ColumnNo } columns found)");
                                     }
                                     break;
                                 default:
