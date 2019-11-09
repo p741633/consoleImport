@@ -126,7 +126,7 @@ namespace AgentConsoleApp
                             else if (Lineno >= 3 && firstColumn != "LN")
                             {
                                 pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                throw new ArgumentException("Data must contain LN column");
+                                throw new ArgumentException($"Data must contain LN column (At line { Lineno })");
                             }
 
                             switch (firstColumn)
