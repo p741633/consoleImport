@@ -37,7 +37,7 @@ namespace AgentConsoleApp
             int counterLine;
 
             // Display title
-            Console.Title = "TxtToDB 1.01";
+            Console.Title = "TxtToDB 1.02";
 
             // Display header
             Console.WriteWithGradient(FiggleFonts.Banner.Render("txt to db"), Color.LightGreen, Color.ForestGreen, 16);
@@ -68,8 +68,8 @@ namespace AgentConsoleApp
             Console.Write("\n");
 
             // Variable for backup
-            var folderBackup = "imported_" + DateTime.Now.ToString("ddMMyyyy_HHmmss");
-            var folderBackupPath = Path.Combine(sourceDirectory, folderBackup);
+            string folderBackup = "imported_" + DateTime.Now.ToString("ddMMyyyy_HHmmss");
+            string folderBackupPath = Path.Combine(sourceDirectory, folderBackup);
 
             try
             {
@@ -78,7 +78,7 @@ namespace AgentConsoleApp
 
                 // Count txt file
                 DirectoryInfo di = new DirectoryInfo(sourceDirectory);
-                var FileNum = di.GetFiles("*.txt").Length;
+                int FileNum = di.GetFiles("*.txt").Length;
 
                 // Throw no txt file
                 if (FileNum == 0)
@@ -96,7 +96,11 @@ namespace AgentConsoleApp
                     pbValidate.Refresh(counterFileValidate, "Validating, Please wait...");
                     Thread.Sleep(50);
 
-                    var Lineno = 1;
+                    int Lineno = 1;
+                    string ErrorMsg = "";
+                    Boolean IsHeaderValid = true;
+                    Boolean IsColumnValid = true;
+
                     using (StreamReader file = new StreamReader(currentFile))
                     {
                         while ((line = file.ReadLine()) != null)
@@ -115,18 +119,24 @@ namespace AgentConsoleApp
 
                             if (Lineno == 1 && firstColumn != "FL")
                             {
-                                pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                throw new ArgumentException("First line must contain FL column");
+                                IsHeaderValid = false;
+                                ErrorMsg = "First line must contain FL column";
                             }
                             else if (Lineno ==2 && firstColumn != "HD")
                             {
-                                pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                throw new ArgumentException("Second line must contain HD column");
+                                IsHeaderValid = false;
+                                ErrorMsg = "Second line must contain HD column";
                             }
                             else if (Lineno >= 3 && firstColumn != "LN")
                             {
+                                IsHeaderValid = false;
+                                ErrorMsg = $"Data must contain LN column (At line { Lineno })";
+                            }
+
+                            if (!IsHeaderValid)
+                            {
                                 pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                throw new ArgumentException("Data must contain LN column");
+                                throw new ArgumentException(ErrorMsg);
                             }
 
                             switch (firstColumn)
@@ -134,34 +144,41 @@ namespace AgentConsoleApp
                                 case "FL":
                                     if (ColumnNo != 3)
                                     {
-                                        pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                        throw new ArgumentException("FL must have 3 columns");
+                                        IsColumnValid = false;
+                                        ErrorMsg = $"FL must have 3 columns ({ ColumnNo } columns found)";
                                     }
                                     break;
                                 case "HD":
                                     if (ColumnNo != 27)
                                     {
-                                        pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                        throw new ArgumentException("HD must have 27 columns");
+                                        IsColumnValid = false;
+                                        ErrorMsg = $"HD must have 27 columns ({ ColumnNo } columns found)";
                                     }
                                     break;
                                 case "LN":
                                     if (ColumnNo != 13)
                                     {
-                                        pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                        throw new ArgumentException($"LN must have 13 columns (At line { Lineno })");
+                                        IsColumnValid = false;
+                                        ErrorMsg = $"LN must have 13 columns (At line { Lineno }, { ColumnNo } columns found)";
                                     }
                                     break;
                                 default:
-                                    pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                    throw new ArgumentException($"Incorrect format, File must contain 'FL, HD or LN' in the first column on each row! (At Line { Lineno})");
-                                    //break;
+                                    IsColumnValid = false;
+                                    ErrorMsg = $"Incorrect format, File must contain 'FL, HD or LN' in the first column on each row! (At Line { Lineno})";
+                                    break;
                                     //continue;
+                            }
+
+                            if (!IsColumnValid)
+                            {
+                                pbValidate.Refresh(counterFileValidate, "Validate failed.");
+                                throw new ArgumentException(ErrorMsg);
                             }
 
                             Lineno++;
                         }
                     }
+
                     // Change wording in progress bar
                     if (counterFileValidate == FileNum)
                     {
@@ -191,11 +208,11 @@ namespace AgentConsoleApp
                     fileName = Path.GetFileName(currentFile);
 
                     // Create progress bar (Each file)
-                    var LineNum = CountLinesReader(currentFile);
+                    int LineNum = CountLinesReader(currentFile);
                     var pbDetail = new ProgressBar(PbStyle.SingleLine, LineNum);
 
                     // Update progress bar (Overall)
-                    pbOverall.Refresh(counterFile, "");
+                    pbOverall.Refresh(counterFile, "Importing, Please wait...");
                     Thread.Sleep(50);
 
                     using (StreamReader file = new StreamReader(currentFile))
@@ -224,7 +241,7 @@ namespace AgentConsoleApp
                             switch (firstColumn)
                             {
                                 case "FL":
-                                    // Store FL key for
+                                    // Store FL key for insert HD
                                     while (!parserFL.EndOfData)
                                     {
                                         cells = parserFL.ReadFields();
@@ -276,7 +293,7 @@ namespace AgentConsoleApp
                     }
 
                     // Move file to folder backup
-                    var destFile = Path.Combine(folderBackupPath, fileName);
+                    string destFile = Path.Combine(folderBackupPath, fileName);
                     File.Move(currentFile, destFile);
 
                     // Add detail to model for showing in table
@@ -297,6 +314,8 @@ namespace AgentConsoleApp
             }
             catch (Exception ex)
             {
+                //pbOverall.Refresh(counterFile, "Import failed");
+
                 // Show error message
                 Console.Write("\nError occured : " , Color.OrangeRed);
                 Console.WriteLine(ex.Message);

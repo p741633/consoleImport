@@ -45,7 +45,7 @@ namespace AgentConsoleApp
 
                 using (var sqlConnection = new SqlConnection(connectionString))
                 {
-                    var sql = "INSERT INTO [EDI_POHEADER LEVEL] (" +
+                    string sql = "INSERT INTO [EDI_POHEADER LEVEL] (" +
                         "[FILE_CODE]" +
                         ",[TOTAL_RECORDS]" +
                         ",[PO_NUMBER]" +
@@ -154,7 +154,7 @@ namespace AgentConsoleApp
 
                 using (var sqlConnection = new SqlConnection(connectionString))
                 {
-                    var sql = "INSERT INTO [EDI_POLINE LEVEL] (" +
+                    string sql = "INSERT INTO [EDI_POLINE LEVEL] (" +
                         "[PO_NUMBER]" +
                         ",[LINE_NUMBER]" +
                         ",[HOSPITEM_CODE]" +
@@ -220,7 +220,7 @@ namespace AgentConsoleApp
 
         public static int CountLinesReader(string FilePath)
         {
-            var lineCounter = 0;
+            int lineCounter = 0;
             using (var reader = new StreamReader(FilePath))
             {
                 while (reader.ReadLine() != null)
