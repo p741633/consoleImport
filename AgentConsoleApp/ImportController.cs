@@ -70,11 +70,10 @@ namespace AgentConsoleApp
                         ",[NOTE_TO_SUPPLIER]" +
                         ",[RESEND_FLAG]" +
                         ",[CREATION_DATE]" +
-                        ",[QUATATION_ID]" +
-                        ",[CUSTOMER_ID]" +
                         ",[LAST_INTERFACED_ DATE]" +
                         ",[INTERFACE_ID]" +
-                        ",[imp_Date]" +
+                        ",[QUATATION_ID]" +
+                        ",[CUSTOMER_ID]" +
                         ") " +
                         "VALUES (" +
                         "@column01, " +
@@ -104,8 +103,7 @@ namespace AgentConsoleApp
                         "@column25," +
                         "@column26," +
                         "@column27," +
-                        "@column28," +
-                        "GETDATE()" +
+                        "@column28" +
                         ")";
                     //affectedRows = sqlConnection.Execute(sql, new { 
                     sqlConnection.Execute(sql, new { 
