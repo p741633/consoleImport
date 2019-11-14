@@ -45,7 +45,7 @@ namespace AgentConsoleApp
 
                 using (var sqlConnection = new SqlConnection(connectionString))
                 {
-                    string sql = "INSERT INTO [EDI_POHEADER LEVEL] (" +
+                    string sql = "INSERT INTO [EDI_POHEADER_LEVEL] (" +
                         "[FILE_CODE]" +
                         ",[TOTAL_RECORDS]" +
                         ",[PO_NUMBER]" +
@@ -61,8 +61,8 @@ namespace AgentConsoleApp
                         ",[SUPPLIER_CODE]" +
                         ",[SHIP_TO_CODE]" +
                         ",[BILL_TO_CODE]" +
-                        ",[Approval Code]" +
-                        ",[Budget Code]" +
+                        ",[Approval_Code]" +
+                        ",[Budget_Code]" +
                         ",[CURRENCY_CODE]" +
                         ",[PAYMENT_TERM]" +
                         ",[DISCOUNT_PCT]" +
@@ -70,7 +70,7 @@ namespace AgentConsoleApp
                         ",[NOTE_TO_SUPPLIER]" +
                         ",[RESEND_FLAG]" +
                         ",[CREATION_DATE]" +
-                        ",[LAST_INTERFACED_ DATE]" +
+                        ",[LAST_INTERFACED_DATE]" +
                         ",[INTERFACE_ID]" +
                         ",[QUATATION_ID]" +
                         ",[CUSTOMER_ID]" +
@@ -152,11 +152,11 @@ namespace AgentConsoleApp
 
                 using (var sqlConnection = new SqlConnection(connectionString))
                 {
-                    string sql = "INSERT INTO [EDI_POLINE LEVEL] (" +
+                    string sql = "INSERT INTO [EDI_POLINE_LEVEL] (" +
                         "[PO_NUMBER]" +
                         ",[LINE_NUMBER]" +
                         ",[HOSPITEM_CODE]" +
-                        ",[HOSPITEM_ NAME]" +
+                        ",[HOSPITEM_NAME]" +
                         ",[DISTITEM_CODE]" +
                         ",[PACK_SIZE_DESC]" +
                         ",[ORDERED_QTY]" +
