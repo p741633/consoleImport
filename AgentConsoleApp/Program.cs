@@ -36,16 +36,6 @@ namespace AgentConsoleApp
             int counterFileValidate = 1;
             int counterLine;
 
-            // Display title
-            Console.Title = "TxtToDB 1.03";
-
-            // Display header
-            Console.WriteWithGradient(FiggleFonts.Banner.Render("txt to db"), Color.LightGreen, Color.ForestGreen, 16);
-            Console.ReplaceAllColorsWithDefaults();
-
-            // Display copyright
-            Console.WriteLine(" --------------- Created by PiriyaV ----------------\n", Color.LawnGreen);
-
             #region Fancy header
             /*
             Console.Write(FiggleFonts.Ogre.Render("------------"));
@@ -63,9 +53,25 @@ namespace AgentConsoleApp
             #endregion
 
             // Ask the user to type path
-            Console.Write(@"Enter source path (eg: D:\folder) : ", Color.LightYellow);
-            sourceDirectory = Convert.ToString(Console.ReadLine());
-            Console.Write("\n");
+            if (args.Length == 0)
+            {
+                // Display title
+                Console.Title = "TxtToDB 1.03";
+
+                // Display header
+                Console.WriteWithGradient(FiggleFonts.Banner.Render("txt to db"), Color.LightGreen, Color.ForestGreen, 16);
+                Console.ReplaceAllColorsWithDefaults();
+
+                // Display copyright
+                Console.WriteLine(" --------------- Created by PiriyaV ----------------\n", Color.LawnGreen);
+
+                Console.Write(@"Enter source path (eg: D:\folder) : ", Color.LightYellow);
+                sourceDirectory = Convert.ToString(Console.ReadLine());
+                Console.Write("\n");
+            } else
+            {
+                sourceDirectory = Convert.ToString(args[0]);
+            }
 
             // Variable for backup
             string folderBackup = "imported_" + DateTime.Now.ToString("ddMMyyyy_HHmmss");
