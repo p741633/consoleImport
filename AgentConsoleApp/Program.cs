@@ -9,6 +9,7 @@ using System.Threading;
 using Konsole;
 using Console = Colorful.Console;
 using static AgentConsoleApp.ImportController;
+using System.Linq;
 
 namespace AgentConsoleApp
 {
@@ -80,7 +81,7 @@ namespace AgentConsoleApp
             try
             {
                 // Full path for txt
-                var FilePath = Directory.EnumerateFiles(sourceDirectory, "*.txt");
+                var FilePath = Directory.EnumerateFiles(sourceDirectory, "*.*", SearchOption.TopDirectoryOnly).Where(s => s.ToLower().EndsWith(".txt"));
 
                 // Count txt file
                 DirectoryInfo di = new DirectoryInfo(sourceDirectory);
