@@ -9,6 +9,7 @@ using System.Threading;
 using Konsole;
 using Console = Colorful.Console;
 using static AgentConsoleApp.ImportController;
+using System.Linq;
 
 namespace AgentConsoleApp
 {
@@ -80,7 +81,7 @@ namespace AgentConsoleApp
             try
             {
                 // Full path for txt
-                var FilePath = Directory.EnumerateFiles(sourceDirectory, "*.txt");
+                var FilePath = Directory.EnumerateFiles(sourceDirectory, "*.*", SearchOption.TopDirectoryOnly).Where(s => s.ToLower().EndsWith(".txt"));
 
                 // Count txt file
                 DirectoryInfo di = new DirectoryInfo(sourceDirectory);
@@ -189,300 +190,54 @@ namespace AgentConsoleApp
                                 {
                                     #region data type FL
                                     case "FL":
-                                        if (cells[1].Length < 1 || cells[1].Length > 40)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"FILE_CODE must have 1 to 40 character ( At Line: { Lineno }, column: 2 )");
-                                        }
-
-                                        try
-                                        {
-                                            var test = Convert.ToInt32(cells[2]);
-                                        }
-                                        catch
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"TOTAL_RECORDS must be integer ( At Line: { Lineno }, column: 3 )");
-                                        }
+                                        ValidateLengthRange(cells[1], 1, 40, pbValidate, counterFileValidate, Lineno, "FILE_CODE", "2");
+                                        ValidateInteger(cells[2], pbValidate, counterFileValidate, Lineno, "TOTAL_RECORDS", "3");
                                         break;
                                     #endregion
                                     #region data type HD
                                     case "HD":
-                                        if (cells[1].Length < 1 || cells[1].Length > 40)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"PO_NUMBER must have 1 to 40 character ( At Line: { Lineno }, column: 2 )");
-                                        }
-
-                                        if (cells[2] != "0" && cells[2] != "1")
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"PO_TYPE must be 0 or 1 ( At Line: { Lineno }, column: 3 )");
-                                        }
-
-                                        if (cells[3].Length > 40)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"CONTRACT_NUMBER must have 40 character long ( At Line: { Lineno }, column: 4 )");
-                                        }
-
-                                        try
-                                        {
-                                            var test = Convert.ToDateTime(cells[4]);
-                                        }
-                                        catch
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"ORDERED_DATE must be date ( At Line: { Lineno }, column: 5 )");
-                                        }
-
-                                        try
-                                        {
-                                            var test = Convert.ToDateTime(cells[5]);
-                                        }
-                                        catch
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"DELIVERY_DATE must be date ( At Line: { Lineno }, column: 6 )");
-                                        }
-
-                                        if (cells[6].Length < 1 || cells[6].Length > 40)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"HOSP_CODE must have 1 to 40 character ( At Line: { Lineno }, column: 7 )");
-                                        }
-
-                                        if (cells[7].Length < 1 || cells[7].Length > 80)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"HOSP_NAME must have 1 to 80 character ( At Line: { Lineno }, column: 8 )");
-                                        }
-
-                                        if (cells[8].Length > 100)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"BUYER_NAME must have 100 character long ( At Line: { Lineno }, column: 9 )");
-                                        }
-
-                                        if (cells[9].Length > 100)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"BUYER_DEPARTMENT must have 100 character long ( At Line: { Lineno }, column: 10 )");
-                                        }
-
-                                        if (cells[10].Length < 1 || cells[10].Length > 40)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"EMAIL must have 1 to 40 character ( At Line: { Lineno }, column: 11 )");
-                                        }
-
-                                        if (cells[11].Length < 1 || cells[11].Length > 40)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"SUPPLIER_CODE must have 1 to 40 character ( At Line: { Lineno }, column: 12 )");
-                                        }
-
-                                        if (cells[12].Length < 1 || cells[12].Length > 40)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"SHIP_TO_CODE must have 1 to 40 character ( At Line: { Lineno }, column: 13 )");
-                                        }
-
-                                        if (cells[13].Length < 1 || cells[13].Length > 40)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"BILL_TO_CODE must have 1 to 40 character ( At Line: { Lineno }, column: 14 )");
-                                        }
-
-                                        if (cells[14].Length < 1 || cells[14].Length > 20)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"Approval Code must have 1 to 20 character ( At Line: { Lineno }, column: 15 )");
-                                        }
-
-                                        if (cells[15].Length < 1 || cells[15].Length > 20)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"Budget Code must have 1 to 20 character ( At Line: { Lineno }, column: 16 )");
-                                        }
-
-                                        if (cells[16].Length < 1 || cells[16].Length > 20)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"CURRENCY_CODE must have 1 to 20 character ( At Line: { Lineno }, column: 17 )");
-                                        }
-
-                                        if (cells[17].Length < 1 || cells[17].Length > 80)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"PAYMENT_TERM must have 1 to 80 character ( At Line: { Lineno }, column: 18 )");
-                                        }
-
-                                        try
-                                        {
-                                            var test = Convert.ToSingle(cells[18]);
-                                        }
-                                        catch
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"DISCOUNT_PCT must be float ( At Line: { Lineno }, column: 19 )");
-                                        }
-
-                                        try
-                                        {
-                                            var test = Convert.ToSingle(cells[19]);
-                                        }
-                                        catch
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"TOTAL_AMOUNT must be float ( At Line: { Lineno }, column: 20 )");
-                                        }
-
-                                        if (cells[20].Length > 500)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"NOTE_TO_SUPPLIER must have 500 character long ( At Line: { Lineno }, column: 21 )");
-                                        }
-
-                                        if (cells[21].Length > 40)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"RESEND_FLAG must have 40 character long ( At Line: { Lineno }, column: 22 )");
-                                        }
-
-                                        try
-                                        {
-                                            var test = Convert.ToDateTime(cells[22]);
-                                        }
-                                        catch
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"CREATION_DATE must be date ( At Line: { Lineno }, column: 23 )");
-                                        }
-
-                                        try
-                                        {
-                                            var test = Convert.ToDateTime(cells[23]);
-                                        }
-                                        catch
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"LAST_INTERFACED_ DATE must be date ( At Line: { Lineno }, column: 24 )");
-                                        }
-
-                                        if (cells[24].Length < 1 || cells[24].Length > 20)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"INTERFACE_ID must have 1 to 20 character ( At Line: { Lineno }, column: 25 )");
-                                        }
-
-                                        if (cells[25].Length > 20)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"QUATATION_ID must have 20 character long ( At Line: { Lineno }, column: 26 )");
-                                        }
-
-                                        if (cells[26].Length > 20)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"CUSTOMER_ID must have 20 character long ( At Line: { Lineno }, column: 27 )");
-                                        }
+                                        ValidateLengthRange(cells[1], 1, 40, pbValidate, counterFileValidate, Lineno, "PO_NUMBER", "2");
+                                        ValidateBit(cells[2], pbValidate, counterFile, Lineno, "PO_TYPE", "3");
+                                        ValidateLengthRange(cells[3], 0, 40, pbValidate, counterFileValidate, Lineno, "CONTRACT_NUMBER", "4");
+                                        ValidateDateTime(cells[4], pbValidate, counterFile, Lineno, "ORDERED_DATE", "5");
+                                        ValidateDateTime(cells[5], pbValidate, counterFile, Lineno, "DELIVERY_DATE", "6");
+                                        ValidateLengthRange(cells[6], 1, 40, pbValidate, counterFileValidate, Lineno, "HOSP_CODE", "7");
+                                        ValidateLengthRange(cells[7], 1, 80, pbValidate, counterFileValidate, Lineno, "HOSP_NAME", "8");
+                                        ValidateLengthRange(cells[8], 0, 100, pbValidate, counterFileValidate, Lineno, "BUYER_NAME", "9");
+                                        ValidateLengthRange(cells[9], 0, 100, pbValidate, counterFileValidate, Lineno, "BUYER_DEPARTMENT", "10");
+                                        ValidateLengthRange(cells[10], 1, 40, pbValidate, counterFileValidate, Lineno, "EMAIL", "11");
+                                        ValidateLengthRange(cells[11], 1, 40, pbValidate, counterFileValidate, Lineno, "SUPPLIER_CODE", "12");
+                                        ValidateLengthRange(cells[12], 1, 40, pbValidate, counterFileValidate, Lineno, "SHIP_TO_CODE", "13");
+                                        ValidateLengthRange(cells[13], 1, 40, pbValidate, counterFileValidate, Lineno, "BILL_TO_CODE", "14");
+                                        ValidateLengthRange(cells[14], 1, 20, pbValidate, counterFileValidate, Lineno, "Approval Code", "15");
+                                        ValidateLengthRange(cells[15], 1, 20, pbValidate, counterFileValidate, Lineno, "Budget Code", "16");
+                                        ValidateLengthRange(cells[16], 1, 420, pbValidate, counterFileValidate, Lineno, "CURRENCY_CODE", "17");
+                                        ValidateLengthRange(cells[17], 1, 80, pbValidate, counterFileValidate, Lineno, "PAYMENT_TERM", "18");
+                                        ValidateFloat(cells[18], pbValidate, counterFile, Lineno, "DISCOUNT_PCT", "19");
+                                        ValidateFloat(cells[19], pbValidate, counterFile, Lineno, "TOTAL_AMOUNT", "20");
+                                        ValidateLengthRange(cells[20], 0, 500, pbValidate, counterFileValidate, Lineno, "NOTE_TO_SUPPLIER", "21");
+                                        ValidateLengthRange(cells[21], 0, 40, pbValidate, counterFileValidate, Lineno, "RESEND_FLAG", "22");
+                                        ValidateDateTime(cells[22], pbValidate, counterFile, Lineno, "CREATION_DATE", "23");
+                                        ValidateDateTime(cells[23], pbValidate, counterFile, Lineno, "LAST_INTERFACED_DATE", "24");
+                                        ValidateLengthRange(cells[24], 1, 20, pbValidate, counterFileValidate, Lineno, "INTERFACE_ID", "25");
+                                        ValidateLengthRange(cells[25], 0, 20, pbValidate, counterFileValidate, Lineno, "QUATATION_ID", "26");
+                                        ValidateLengthRange(cells[26], 0, 20, pbValidate, counterFileValidate, Lineno, "CUSTOMER_ID", "27");
                                         break;
                                     #endregion
                                     #region data type LN
                                     case "LN":
-                                        try
-                                        {
-                                            var test = Convert.ToInt16(cells[1]);
-                                        }
-                                        catch
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"LINE_NUMBER must be smallint ( At Line: { Lineno }, column: 2 )");
-                                        }
-
-                                        if (cells[2].Length < 1 || cells[2].Length > 40)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"HOSPITEM_CODE must have 1 to 40 character ( At Line: { Lineno }, column: 3 )");
-                                        }
-
-                                        if (cells[3].Length > 4000)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"HOSPITEM_ NAME must have 4,000 character long ( At Line: { Lineno }, column: 4 )");
-                                        }
-
-                                        if (cells[4].Length < 1 || cells[4].Length > 40)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"DISTITEM_CODE must have 1 to 40 character ( At Line: { Lineno }, column: 5 )");
-                                        }
-
-                                        if (cells[5].Length > 40)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"PACK_SIZE_DESC must have 20 character long ( At Line: { Lineno }, column: 6 )");
-                                        }
-
-                                        try
-                                        {
-                                            var test = Convert.ToSingle(cells[6]);
-                                        }
-                                        catch
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"ORDERED_QTY must be float ( At Line: { Lineno }, column: 7 )");
-                                        }
-
-                                        if (cells[7].Length < 1 || cells[7].Length > 20)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"UOM must have 1 to 20 character ( At Line: { Lineno }, column: 8 )");
-                                        }
-
-                                        try
-                                        {
-                                            var test = Convert.ToSingle(cells[8]);
-                                        }
-                                        catch
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"PRICE_PER_UNIT must be float ( At Line: { Lineno }, column: 9 )");
-                                        }
-
-                                        try
-                                        {
-                                            var test = Convert.ToSingle(cells[9]);
-                                        }
-                                        catch
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"LINE_AMOUNT must be float ( At Line: { Lineno }, column: 10 )");
-                                        }
-
-                                        try
-                                        {
-                                            var test = Convert.ToSingle(cells[10]);
-                                        }
-                                        catch
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"DISCOUNT_LINE_ITEM must be float ( At Line: { Lineno }, column: 11 )");
-                                        }
-
-                                        if (cells[11].Length < 1 || cells[11].Length > 2)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"URGENT_FLAG must have 1 to 2 character ( At Line: { Lineno }, column: 12 )");
-                                        }
-
-                                        if (cells[12].Length > 255)
-                                        {
-                                            pbValidate.Refresh(counterFileValidate, "Validate failed.");
-                                            throw new ArgumentException($"COMMENT must have 255 character long ( At Line: { Lineno }, column: 13 )");
-                                        }
-
+                                        ValidateInteger(cells[1], pbValidate, counterFile, Lineno, "LINE_NUMBER", "2");
+                                        ValidateLengthRange(cells[2], 1, 40, pbValidate, counterFileValidate, Lineno, "HOSPITEM_CODE", "3");
+                                        ValidateLengthRange(cells[3], 0, 4000, pbValidate, counterFileValidate, Lineno, "HOSPITEM_", "4");
+                                        ValidateLengthRange(cells[4], 1, 40, pbValidate, counterFileValidate, Lineno, "DISTITEM_CODE", "5");
+                                        ValidateLengthRange(cells[5], 0, 40, pbValidate, counterFileValidate, Lineno, "PACK_SIZE_DESC", "6");
+                                        ValidateFloat(cells[6], pbValidate, counterFile, Lineno, "ORDERED_QTY", "7");
+                                        ValidateLengthRange(cells[7], 1, 20, pbValidate, counterFileValidate, Lineno, "UOM", "8");
+                                        ValidateFloat(cells[8], pbValidate, counterFile, Lineno, "PRICE_PER_UNIT", "9");
+                                        ValidateFloat(cells[9], pbValidate, counterFile, Lineno, "LINE_AMOUNT", "10");
+                                        ValidateFloat(cells[10], pbValidate, counterFile, Lineno, "DISCOUNT_LINE_ITEM", "11");
+                                        ValidateLengthRange(cells[11], 1, 2, pbValidate, counterFileValidate, Lineno, "URGENT_FLAG", "12");
+                                        ValidateLengthRange(cells[12], 0, 255, pbValidate, counterFileValidate, Lineno, "COMMENT", "13");
                                         break;
                                         #endregion
                                 }
@@ -668,6 +423,67 @@ namespace AgentConsoleApp
             Console.ReadKey();
         }
 
-    }
+        public static void ValidateLengthRange(string cell, int minLength, int maxLength, ProgressBar pb, int fileNum, int lineNum, string columnName, string columnNum)
+        {
+            if (cell.Length < minLength || cell.Length > maxLength)
+            {
+                pb.Refresh(fileNum, "Validate failed.");
+                if (minLength == maxLength)
+                {
+                    throw new ArgumentException($"{columnName} must have {minLength} character ( At Line: { lineNum }, column: {columnNum} )");
+                } else
+                {
+                    throw new ArgumentException($"{columnName} must have {minLength} to {maxLength} character ( At Line: { lineNum }, column: {columnNum} )");
+                }
+            }
+        }
 
+        public static void ValidateDateTime(string cell, ProgressBar pb, int fileNum, int lineNum, string columnName, string columnNum)
+        {
+            try
+            {
+                var test = Convert.ToDateTime(cell);
+            }
+            catch
+            {
+                pb.Refresh(fileNum, "Validate failed.");
+                throw new ArgumentException($"{columnName} must be date ( At Line: { lineNum }, column: {columnNum} )");
+            }
+        }
+
+        public static void ValidateFloat(string cell, ProgressBar pb, int fileNum, int lineNum, string columnName, string columnNum)
+        {
+            try
+            {
+                var test = Convert.ToSingle(cell);
+            }
+            catch
+            {
+                pb.Refresh(fileNum, "Validate failed.");
+                throw new ArgumentException($"{columnName} must be float ( At Line: { lineNum }, column: {columnNum} )");
+            }
+        }
+
+        public static void ValidateInteger(string cell, ProgressBar pb, int fileNum, int lineNum, string columnName, string columnNum)
+        {
+            try
+            {
+                var test = Convert.ToInt32(cell);
+            }
+            catch
+            {
+                pb.Refresh(fileNum, "Validate failed.");
+                throw new ArgumentException($"{columnName} must be integer ( At Line: { lineNum }, column: {columnNum} )");
+            }
+        }
+
+        public static void ValidateBit(string cell, ProgressBar pb, int fileNum, int lineNum, string columnName, string columnNum)
+        {
+            if (cell != "0" && cell != "1")
+            {
+                pb.Refresh(fileNum, "Validate failed.");
+                throw new ArgumentException($"{columnName} must be 0 or 1 ( At Line: { lineNum }, column: {columnNum} )");
+            }
+        }
+    }
 }
