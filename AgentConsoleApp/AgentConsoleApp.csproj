@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <Authors>PiriyaV</Authors>
     <Company>GPO</Company>
     <Product>AA43</Product>
@@ -21,13 +21,13 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Colorful.Console" Version="1.2.9" />
-    <PackageReference Include="ConsoleTables" Version="2.3.0" />
-    <PackageReference Include="Dapper" Version="2.0.30" />
-    <PackageReference Include="Figgle" Version="0.3.0" />
+    <PackageReference Include="Colorful.Console" Version="1.2.11" />
+    <PackageReference Include="ConsoleTables" Version="2.4.2" />
+    <PackageReference Include="Dapper" Version="2.0.35" />
+    <PackageReference Include="Figgle" Version="0.4.0" />
     <PackageReference Include="Goblinfactory.Konsole.ProgressBar.Core" Version="1.0.2" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.6.0" />
-    <PackageReference Include="System.Data.SqlClient" Version="4.7.0" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.2" />
   </ItemGroup>
 
 </Project>
