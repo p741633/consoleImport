@@ -32,7 +32,7 @@ namespace AgentConsoleApp
             }
         }
 
-        public static string DumpHD(TextFieldParser parser, string connectionString, string FL_Filecode, string FL_TotalRecord)
+        public static string DumpHD(TextFieldParser parser, string connectionString, string FL_Filecode, string FL_TotalRecord, string fileName)
         {
             //int affectedRows = 0;
             string HD_PoNo = "";
@@ -74,6 +74,7 @@ namespace AgentConsoleApp
                         ",[INTERFACE_ID]" +
                         ",[QUATATION_ID]" +
                         ",[CUSTOMER_ID]" +
+                        ",[File_Name]" +
                         ") " +
                         "VALUES (" +
                         "@column01, " +
@@ -103,7 +104,8 @@ namespace AgentConsoleApp
                         "@column25," +
                         "@column26," +
                         "@column27," +
-                        "@column28" +
+                        "@column28," +
+                        "@column29" +
                         ")";
                     //affectedRows = sqlConnection.Execute(sql, new { 
                     sqlConnection.Execute(sql, new { 
@@ -134,7 +136,8 @@ namespace AgentConsoleApp
                         column25 = fields[23],
                         column26 = fields[24],
                         column27 = fields[25],
-                        column28 = fields[26]
+                        column28 = fields[26],
+                        column29 = fileName
                     });
                 }
             }

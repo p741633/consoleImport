@@ -57,7 +57,7 @@ namespace AgentConsoleApp
             if (args.Length == 0)
             {
                 // Display title
-                Console.Title = "TxtToDB 1.0.4";
+                Console.Title = "TxtToDB 1.0.5";
 
                 // Display header
                 Console.WriteWithGradient(FiggleFonts.Banner.Render("txt to db"), Color.LightGreen, Color.ForestGreen, 16);
@@ -329,7 +329,7 @@ namespace AgentConsoleApp
                                     */
 
                                     // Insert to DB
-                                    HD_PoNo = DumpHD(parser, conn, FL_Filecode, FL_TotalRecord);
+                                    HD_PoNo = DumpHD(parser, conn, FL_Filecode, FL_TotalRecord, fileName);
                                     headerLineNo++;
                                     break;
                                 case "LN":
