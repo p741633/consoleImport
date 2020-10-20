@@ -329,7 +329,7 @@ namespace AgentConsoleApp
                                     */
 
                                     // Insert to DB
-                                    HD_PoNo = DumpHD(parser, conn, FL_Filecode, FL_TotalRecord);
+                                    HD_PoNo = DumpHD(parser, conn, FL_Filecode, FL_TotalRecord, fileName);
                                     headerLineNo++;
                                     break;
                                 case "LN":

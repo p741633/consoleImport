@@ -32,7 +32,7 @@ namespace AgentConsoleApp
             }
         }
 
-        public static string DumpHD(TextFieldParser parser, string connectionString, string FL_Filecode, string FL_TotalRecord)
+        public static string DumpHD(TextFieldParser parser, string connectionString, string FL_Filecode, string FL_TotalRecord, string fileName)
         {
             //int affectedRows = 0;
             string HD_PoNo = "";
