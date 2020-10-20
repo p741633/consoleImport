@@ -8,8 +8,8 @@
     <Product>AA43</Product>
     <Description>Import txt (comma seperate) to DB</Description>
     <ApplicationIcon>BlueMonsters.ico</ApplicationIcon>
-    <Copyright>Fo</Copyright>
-    <Version>1.0.4</Version>
+    <Copyright>PiriyaV-Fo</Copyright>
+    <Version>1.0.5</Version>
     <!--
 	  <PublishSingleFile>true</PublishSingleFile>
 	  <PublishTrimmed>true</PublishTrimmed>
