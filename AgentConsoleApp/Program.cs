@@ -15,7 +15,7 @@ namespace AgentConsoleApp
 {
     class Program
     {
-        public class returnModel
+        public class ReturnModel
         {
             public string FileName { get; set; }
             public int HeaderNo { get; set; }
@@ -28,7 +28,7 @@ namespace AgentConsoleApp
             string sourceDirectory;
             string line;
             int detailLineNo, headerLineNo;
-            List<returnModel> returnCollection = new List<returnModel>();
+            List<ReturnModel> returnCollection = new List<ReturnModel>();
             string FL_Filecode;
             string FL_TotalRecord;
             string HD_PoNo;
@@ -272,7 +272,7 @@ namespace AgentConsoleApp
                     FL_TotalRecord = "";
                     HD_PoNo = "";
 
-                    returnModel Model = new returnModel();
+                    ReturnModel Model = new ReturnModel();
 
                     fileName = Path.GetFileName(currentFile);
 
