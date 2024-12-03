@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Text;
 using Dapper;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 
 namespace AgentConsoleApp
 {
